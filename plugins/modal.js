@@ -25,9 +25,13 @@ function _createModalFooter (buttons = []){
 
 function _createModal (options){
     const DEFAULT_WIDTH = '600px'
-
     const modal = document.createElement('div');
     modal.classList.add('xmodal');
+    // if(options.has)
+    // modal.id = options.id;
+    // if(options.hasOwnProperty("class")){
+    //     modal.classList.add(`${options.class}`);
+    // }
     modal.insertAdjacentHTML('afterbegin',`
         <div class="modal--overlay" data-close="true">
             <div class="modal--window" style="width: ${options.width || DEFAULT_WIDTH}">
@@ -68,6 +72,9 @@ $.modal = function(options){
             setTimeout(() => {
                 $modal.classList.remove('hide--animation');
                 closing = false;
+                if (typeof options.onClose === 'function') {
+                    options.onClose();                    
+                }
             }, ANIMATION_SPEED);
         }
     }
