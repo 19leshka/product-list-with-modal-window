@@ -3,7 +3,7 @@ $.confirm = function(options) {
       const modal = $.modal({
         title: options.title,
         width: '400px',
-        closable: false,
+        closable: true,
         content: options.content,
         onClose() {
           modal.destroy();
@@ -11,7 +11,7 @@ $.confirm = function(options) {
         footerButtons: [
           {text: 'Отмена', type: 'secondary', handler() {
               modal.close();    
-              reject(this.modal);
+              reject();
             }},
           {text: 'Удалить', type: 'danger', handler() {
               modal.close();
@@ -22,4 +22,4 @@ $.confirm = function(options) {
   
       setTimeout(() => modal.open(), 100);
     })
-}
+}; // Promise to wait for an action on a modal window 

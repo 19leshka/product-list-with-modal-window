@@ -9,36 +9,64 @@ const apples = [
     {id: 2, title: 'iPhone 12', price: 700 , img: 'assets/images/iphone12.jpeg'},
     {id: 3, title: 'iPhone 13', price: 800 , img: 'assets/images/iphone13.jpeg'}
 ]
-  
-const ProductsList = $.list(apples);
 
-const MyModal = $.modal({
-    title: "Модальное окно",
+let products = apples; // Product selection
+
+/* Generating products cards to HTML code */
+const toHTML = products => `
+  <div class="col">
+    <div class="card">
+      <img class="card-img-top" src="${products.img}" alt="${products.title}">
+      <div class="card-body">
+        <h5 class="card-title">${products.title}</h5>
+        <a href="#" class="btn btn-primary" data-btn="price" data-id="${products.id}">Посмотреть цену</a>
+        <a href="#" class="btn btn-danger" data-btn="remove" data-id="${products.id}">Удалить</a>
+      </div>
+    </div>
+  </div>
+`;                                          
+
+/* Adding products to the page */
+function render() {
+    const html = products.map(toHTML).join('');
+    document.querySelector('#products').innerHTML = html;
+}
+  
+render();
+
+/* Creating a modal window with the product price */
+const priceModal = $.modal({
+    title: 'Цена на Товар',
     closable: true,
-    content: `
-        <h4>Модальное окно работает</h4>
-        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit.</p>
-    `,
-    width: "400px",
+    width: '400px',
     footerButtons: [
-        {
-            text: 'Ok',
-            type: 'primary',
-            handler() {
-                console.log("Primary os clicked");
-                MyModal.close();
-            }
-        },
-        {
-            text: 'Cancel',
-            type: 'danger',
-            handler() {
-                console.log("Danger is clicked");
-                MyModal.close();
-            }
-        }
+      {text: 'Закрыть', type: 'primary', handler() {
+        priceModal.close()
+      }}
     ]
 });
 
-
-ProductsList.create();
+/* Event handler on product buttons */
+document.addEventListener('click', event => {
+    event.preventDefault();
+    const btnType = event.target.dataset.btn;
+    const id = +event.target.dataset.id;
+    const product = products.find(f => f.id === id);
+  
+    if (btnType === 'price') {
+      priceModal.setContent(`
+        <p>Цена на ${product.title}: <strong>${product.price}$</strong></p>
+      `);
+      priceModal.open()
+    } else if (btnType === 'remove') {
+      $.confirm({
+        title: 'Вы уверены?',
+        content: `<p>Вы удаляете: <strong>${product.title}</strong></p>`
+      }).then(() => {
+        products = products.filter(f => f.id !== id);
+        render();
+      }).catch(() => {
+        console.log('Cancel');
+      })
+    }
+});

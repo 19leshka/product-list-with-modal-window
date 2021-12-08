@@ -1,3 +1,5 @@
+/* Modal Window */
+
 .xmodal{
     user-select: none;
 }
@@ -85,11 +87,13 @@
     border-top: 1px solid #eee;
 }
 
+/* Product Card Styles */
+
 .card{
-    max-width: 300px;
+    width: 300px;
+    margin-bottom: 20px;
 }
 
 .card-img-top{
     object-fit: cover;
-    /* max-height: 300px; */
 }

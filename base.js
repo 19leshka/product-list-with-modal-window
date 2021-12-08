@@ -1,4 +1,2 @@
-const $ = {};
-
+const $ = {};  // Global Object
 window.$ = $;
-
